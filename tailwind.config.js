@@ -12,10 +12,25 @@ module.exports = {
   },
   darkMode: false, // or 'media' or 'class'
   theme: {
-    extend: {}
+    extend: {
+      colors: {
+        'primary': '#2958E5',
+        'primary-hover': '#224BC5',
+        'primary-disabled': '#95A9E4',
+        'secondary': '#A5B5E5',
+        'secondary-hover': '#94A2CD',
+        'success': '#6FCF97',
+        'success-hover': '#51A775',
+        'success-disabled': '#AAEDC6',
+        'sidebar': '#F5F5F5'
+      }
+    }
   },
   variants: {
     extend: {}
   },
-  plugins: []
+  plugins: [
+    require('@tailwindcss/typography'),
+    require('@tailwindcss/forms'),
+  ]
 }
