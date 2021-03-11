@@ -13,6 +13,9 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
+      height: {
+        '(screen-20)': 'calc(100vh - 5rem)'
+      },
       colors: {
         'primary': '#2958E5',
         'primary-hover': '#224BC5',

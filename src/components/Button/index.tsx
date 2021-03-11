@@ -8,6 +8,7 @@ export interface ButtonProps {
   disabled?: boolean;
   loading?: boolean;
   color: colors;
+  icon?: Object;
   onClick: (e) => void;
 }
 
@@ -19,6 +20,7 @@ export const Button: React.FC<ButtonProps> = ({
   color,
   onClick,
   className,
+  icon,
   loading = false,
   disabled = false,
 }) => {
@@ -34,7 +36,16 @@ export const Button: React.FC<ButtonProps> = ({
       className={classes}
       onClick={disabled || loading ? () => {} : onClick}
     >
-      {loading ? <Loading style={{ margin: "-10px auto" }} /> : children}
+      {loading ? (
+        <Loading style={{ margin: "-10px auto" }} />
+      ) : icon ? (
+        <div className="flex items-center gap-4">
+          {icon}
+          {children}
+        </div>
+      ) : (
+        children
+      )}
     </button>
   );
 };
