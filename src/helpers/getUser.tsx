@@ -21,7 +21,7 @@ export default async function getCurrentUser(ctx) {
       }
     );
 
-    return user.data.data;
+    return { token: cookies.token, user: user.data.data };
   } catch (err) {
     nookies.destroy(ctx, "token");
     ctx.res.statusCode = 302;

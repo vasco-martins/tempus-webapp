@@ -1,11 +1,21 @@
 import axios from "axios";
 import { redirect } from "next/dist/next-server/server/api-utils";
 import Head from "next/head";
+import { useRouter } from "next/router";
 
-import nookies, { parseCookies } from "nookies";
-import React from "react";
+import nookies, { destroyCookie, parseCookies } from "nookies";
+import React, { useEffect } from "react";
 
 export default function Login() {
+  const router = useRouter();
+
+  const cookies = parseCookies();
+
+  useEffect(() => {
+    destroyCookie(null, "token");
+    router.push("/auth/login");
+  }, []);
+
   return (
     <>
       <Head>
@@ -27,12 +37,7 @@ export async function getServerSideProps(ctx) {
     });
   }
 
-  nookies.destroy(ctx, "token");
-
   return {
-    redirect: {
-      destination: "/auth/login",
-      permanent: false,
-    },
+    props: {},
   };
 }

@@ -51,21 +51,21 @@ export const Header: React.FC<HeaderProps> = ({ user }) => {
               <div className="py-1" role="none">
                 <a
                   href="#"
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
                   role="menuitem"
                 >
                   Account settings
                 </a>
                 <a
                   href="#"
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
                   role="menuitem"
                 >
                   Support
                 </a>
                 <Link href="/auth/logout">
                   <a
-                    className="block px-4 py-2 text-sm text-red-700 hover:bg-gray-100 hover:text-gray-900 cursor-pointer"
+                    className="block px-4 py-2 text-sm text-red-700 hover:bg-gray-100 hover:text-gray-900 cursor-pointer transition-colors"
                     role="menuitem"
                   >
                     Logout
