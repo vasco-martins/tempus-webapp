@@ -1,11 +1,6 @@
 import { Transition } from "@headlessui/react";
-import React, { useRef } from "react";
-import { Button } from "../Button";
-import { TextField } from "../Forms/TextField";
-import { Heading } from "../Heading";
+import React from "react";
 import { OuterClick } from "react-outer-click";
-
-// import { Container } from './styles';
 
 export interface ModalProps {
   isOpen: boolean;
@@ -15,7 +10,7 @@ export interface ModalProps {
 const Modal: React.FC<ModalProps> = ({ isOpen, children, onOutsideClick }) => {
   return (
     <Transition appear={true} show={isOpen}>
-      <div className="fixed z-10 inset-0 overflow-y-auto">
+      <div className="fixed z-50 inset-0 overflow-y-auto">
         <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20  sm:block sm:p-0">
           <Transition.Child
             enter="transition-opacity ease-out duration-300"
@@ -65,9 +60,3 @@ const Modal: React.FC<ModalProps> = ({ isOpen, children, onOutsideClick }) => {
 };
 
 export default Modal;
-function useOuterClick(
-  profileDropdown: React.MutableRefObject<any>,
-  arg1: () => void
-) {
-  throw new Error("Function not implemented.");
-}

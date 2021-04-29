@@ -24,6 +24,12 @@ export default function Home({ user, token }) {
 
   const [projects, setProjects] = useState(null);
 
+  const handleKeydownEvent = async (e) => {
+    if (!(e.key === "Enter") || projectName.length < 2) return;
+
+    await createProject();
+  };
+
   const createProject = async () => {
     setProjectError(null);
     setLoading(true);
@@ -36,6 +42,8 @@ export default function Home({ user, token }) {
     }
 
     setIsOpen(false);
+
+    setProjects(() => [data, ...projects]);
     toast.success("Projeto adicionado com sucesso!");
   };
 
@@ -70,6 +78,7 @@ export default function Home({ user, token }) {
             onChange={setProjectName}
             error={projectError}
             label="Nome do Projeto"
+            onKeyDown={handleKeydownEvent}
           />
         </ModalBody>
         <ModalFooter>
@@ -112,11 +121,13 @@ export default function Home({ user, token }) {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {!projects && _.times(8, () => <Skeleton height={150} />)}
+          {!projects && _.times(8, (i) => <Skeleton key={i} height={150} />)}
 
           {projects &&
             projects.length > 0 &&
-            _.map(projects, (project) => <ProjectCard project={project} />)}
+            _.map(projects, (project) => (
+              <ProjectCard key={project.id} project={project} />
+            ))}
 
           {projects && projects.length == 0 && <p>Sem projetos adicionados</p>}
         </div>

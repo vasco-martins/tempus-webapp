@@ -3,6 +3,8 @@ import React, { useRef, useState } from "react";
 import { User } from "../../@types/user";
 import { useOuterClick } from "react-outer-click";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import UserController from "../../controllers/UserController";
 
 export interface HeaderProps {
   user: User;
@@ -11,6 +13,7 @@ export interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({ user }) => {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const profileDropdown = useRef(null);
+  const router = useRouter();
 
   useOuterClick(profileDropdown, () => {
     setIsProfileMenuOpen(false);
@@ -63,14 +66,14 @@ export const Header: React.FC<HeaderProps> = ({ user }) => {
                 >
                   Support
                 </a>
-                <Link href="/auth/logout">
-                  <a
-                    className="block px-4 py-2 text-sm text-red-700 hover:bg-gray-100 hover:text-gray-900 cursor-pointer transition-colors"
-                    role="menuitem"
-                  >
-                    Logout
-                  </a>
-                </Link>
+
+                <a
+                  className="block px-4 py-2 text-sm text-red-700 hover:bg-gray-100 hover:text-gray-900 cursor-pointer transition-colors"
+                  role="menuitem"
+                  onClick={() => UserController.logout(router)}
+                >
+                  Logout
+                </a>
               </div>
             </div>
           )}

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 // import { Container } from './styles';
 
@@ -13,10 +13,17 @@ export interface SidebarItemProps {
 const SidebarItem: React.FC<SidebarItemProps> = ({ icon, name, href }) => {
   const router = useRouter();
 
-  let className = "link-body flex gap-4 items-center cursor-pointer";
-  if (router.pathname === href) {
-    className = `${className} text-blue-600 font-bold`;
-  }
+  const [className, setClassName] = useState(
+    "link-body flex gap-4 items-center cursor-pointer"
+  );
+
+  useEffect(() => {
+    console.log(window.location.pathname);
+    if (window.location.pathname === href) {
+      setClassName(`${className} text-blue-600 font-bold`);
+    }
+  }, []);
+
   return (
     <Link href={href}>
       <div className={className}>

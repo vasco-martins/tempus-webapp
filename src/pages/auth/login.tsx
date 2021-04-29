@@ -1,12 +1,12 @@
 import axios from "axios";
 import Head from "next/head";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import { parseCookies, setCookie } from "nookies";
 import React, { useState } from "react";
 import { Button } from "../../components/Button";
 import { TextField } from "../../components/Forms/TextField";
 import { Heading } from "../../components/Heading";
-import { useRouter } from "next/router";
-import nookies from "nookies";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -16,6 +16,13 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const router = useRouter();
+
+  const handleKeydownEvent = async (e) => {
+    if (!(e.key === "Enter") || email.length == 0 || password.length == 0)
+      return;
+
+    await submit();
+  };
 
   const submit = async () => {
     setLoading(true);
@@ -59,7 +66,7 @@ export default function Login() {
         <title>Tempus | Login</title>
       </Head>
       <div className="grid grid-cols-1 md:grid-cols-2 min-h-screen">
-        <div className="login flex items-center ">
+        <div className="login flex items-center bg-white">
           <div className="w-2/3 grid grid-cols-1 gap-6  m-auto">
             <Heading size={"h2"} weight={"bold"} className="">
               Login
@@ -70,6 +77,7 @@ export default function Login() {
               error={emailError}
               onChange={setEmail}
               label="Email"
+              onKeyDown={handleKeydownEvent}
             />
             <TextField
               name="password"
@@ -77,6 +85,7 @@ export default function Login() {
               onChange={setPassword}
               label="Password"
               error={passwordError}
+              onKeyDown={handleKeydownEvent}
             />
             <Button
               onClick={submit}
@@ -87,6 +96,12 @@ export default function Login() {
             >
               Login
             </Button>
+            <Link href="/auth/register">
+              <p className="cursor-pointer">
+                Não tem uma conta?{" "}
+                <span className="underline text-primary">Registe-se aqui!</span>
+              </p>
+            </Link>
           </div>
         </div>
         <div className="image hidden md:block bg-blue-50"></div>

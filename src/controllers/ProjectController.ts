@@ -18,6 +18,23 @@ export default class ProjectController {
     return response.data.data as Project;
   }
 
+  static async show (token, id): Promise<Project> {
+    try {
+      const response = await axios.get(this.baseUrl + "/" + id, {
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + token
+        },
+      });
+  
+      return response.data.data as Project;
+    } catch (ex) {
+      return null;
+    }
+  }
+
+
   static async store (token, projectName) {
 
     try {

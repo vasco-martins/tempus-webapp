@@ -2,20 +2,27 @@ import React from "react";
 import { ToastContainer } from "react-toastify";
 import { User } from "../../@types/user";
 import { Header } from "../Header";
-import Sidebar from "../Sidebar";
+
 import "react-toastify/dist/ReactToastify.css";
+import { Project } from "../../@types/project";
+import ProjectSidebar from "../ProjectSidebar";
 
 // import { Container } from './styles';
 export interface LayoutProps {
   user: User;
+  project: Project;
 }
 
-const LayoutWrapper: React.FC<LayoutProps> = ({ children, user }) => {
+const ProjectLayoutWrapper: React.FC<LayoutProps> = ({
+  children,
+  user,
+  project,
+}) => {
   return (
     <>
       <Header user={user} />
       <div className="grid grid-cols-12 z-10">
-        <Sidebar />
+        <ProjectSidebar project={project} />
         <div className="col-span-12 md:col-span-9 lg:col-span-10 p-12">
           {children}
         </div>
@@ -35,4 +42,4 @@ const LayoutWrapper: React.FC<LayoutProps> = ({ children, user }) => {
   );
 };
 
-export default LayoutWrapper;
+export default ProjectLayoutWrapper;
