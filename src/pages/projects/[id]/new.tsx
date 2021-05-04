@@ -40,6 +40,11 @@ export default function New({ user, token, project, fields }) {
   const [softDeletes, setSoftDeletes] = useState(false);
   const [editingIndex, setEditingIndex] = useState(-1);
 
+  const [selectKey, setSelectKey] = useState("");
+  const [selectValue, setSelectValue] = useState("");
+  const [selectFields, setSelectFields] = useState([]);
+  const [selectKeyError, setSelectKeyError] = useState("");
+
   const toggleIsRequired = () => setIsRequired(!isRequired);
 
   const addCrudFields = (name, data) => {
@@ -51,6 +56,26 @@ export default function New({ user, token, project, fields }) {
       crudFieldMutation.push(data);
     }
     setCrudFields(crudFieldMutation);
+  };
+
+  const addSelectFields = (name, data) => {
+    setSelectKeyError("");
+    if (selectFields.some((e) => e.name === data.name)) {
+      setSelectKeyError("A chave já existe");
+      return;
+    }
+    setSelectKey("");
+    setSelectValue("");
+    const selectFieldMutation = selectFields;
+
+    selectFieldMutation.push(data);
+    setSelectFields(selectFieldMutation);
+    setValidations({ ...validations, name: selectFieldMutation });
+    console.log(validations);
+  };
+
+  const removeSelectField = (data) => {
+    setSelectFields(selectFields.filter((item) => item.name !== data.name));
   };
 
   const removeCrudField = (field) => {
@@ -137,6 +162,61 @@ export default function New({ user, token, project, fields }) {
           </div>
         );
       }
+      if (validation.type === "select") {
+        return (
+          <div className="col-span-2">
+            <h2 className="text-xl mb-3">{validation.label}</h2>
+
+            <div className="flex gap-8 items-start mb-8">
+              <TextField
+                name="fieldName"
+                type="text"
+                error={selectKeyError || ""}
+                onChange={setSelectKey}
+                value={selectKey}
+                label="Valor"
+                required
+              />
+              <TextField
+                name="fieldName"
+                type="text"
+                onChange={setSelectValue}
+                value={selectValue}
+                label="Label"
+                required
+              />
+              <Button
+                className=" my-auto"
+                color="primary"
+                onClick={() => {
+                  addSelectFields(validation.name, {
+                    name: selectKey,
+                    label: selectValue,
+                  });
+                  console.log(selectFields);
+                }}
+                icon={<FiPlus />}
+              ></Button>
+            </div>
+            <Table>
+              <THead>
+                <TableHead>Chave</TableHead>
+                <TableHead>Valor</TableHead>
+
+                <th scope="col" className="relative px-6 py-3">
+                  <span className="sr-only text-red-300">Remover</span>
+                </th>
+              </THead>
+              <SortableSelectList
+                items={selectFields}
+                onSortEnd={({ oldIndex, newIndex }) => {
+                  setSelectFields(arrayMove(selectFields, oldIndex, newIndex));
+                }}
+              />
+            </Table>
+          </div>
+        );
+      }
     });
 
     return htmlFields;
@@ -199,6 +279,40 @@ export default function New({ user, token, project, fields }) {
           </button>
         </td>
       </TableRow>
+    );
+  });
+
+  const SortableSelectField = SortableElement(({ value }) => {
+    return (
+      <TableRow>
+        <TableData>{value.name}</TableData>
+        <TableData>{value.label}</TableData>
+
+        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+          <button
+            onClick={() => {
+              removeSelectField(value);
+            }}
+            className="text-red-600 hover:text-red-900 cursor-pointer"
+          >
+            Remover
+          </button>
+        </td>
+      </TableRow>
+    );
+  });
+
+  const SortableSelectList = SortableContainer(({ items }) => {
+    return (
+      <TBody>
+        {_.map(items, (field, index) => (
+          <SortableSelectField
+            key={`item-${field.name}`}
+            index={index}
+            value={field}
+          />
+        ))}
+      </TBody>
     );
   });
 
@@ -315,7 +429,7 @@ export default function New({ user, token, project, fields }) {
           </div>
           <div className="my-4">
             <Heading size="h4" weight="normal">
-              Validações
+              Opções Extra
             </Heading>
           </div>
           <div className="grid grid-cols-2">{buildValidationField()}</div>
@@ -364,7 +478,7 @@ export default function New({ user, token, project, fields }) {
             value={label}
             error={errors?.label || null}
             onChange={setLabel}
-            label="Label"
+            label="Título no Menu"
             required
           />
           <div className="checkbox flex">
