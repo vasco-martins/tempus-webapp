@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { parseCookies, setCookie } from "nookies";
 import React, { useState } from "react";
+import CookieConsent from "react-cookie-consent";
 import { Button } from "../../components/Button";
 import { TextField } from "../../components/Forms/TextField";
 import { Heading } from "../../components/Heading";
@@ -102,6 +103,13 @@ export default function Login() {
                 <span className="underline text-primary">Registe-se aqui!</span>
               </p>
             </Link>
+            <CookieConsent
+              style={{ background: "#F5F7FF", color: "#3D3D3D" }}
+              buttonText="Compreendi!"
+            >
+              Este website utiliza cookies para melhorar a experiência de
+              utilização
+            </CookieConsent>
           </div>
         </div>
         <div className="image hidden md:block bg-blue-50"></div>

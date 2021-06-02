@@ -10,6 +10,7 @@ export interface TextFieldProps {
   max?: string;
   error?: string;
   required?: boolean;
+  pattern?: string;
   onKeyDown?: (event: KeyboardEvent) => void;
   onChange: (val: string) => void;
 }

@@ -10,8 +10,6 @@ import SidebarWrapper from "./SidebarWrapper";
 export default function Sidebar() {
   const router = useRouter();
 
-  console.log(router.query.referer);
-
   return (
     <SidebarWrapper>
       {router.pathname !== "/" && (

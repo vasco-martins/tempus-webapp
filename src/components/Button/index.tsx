@@ -12,7 +12,12 @@ export interface ButtonProps {
   onClick: (e) => void;
 }
 
-export const buttonColors = ["primary", "secondary", "success"] as const;
+export const buttonColors = [
+  "primary",
+  "secondary",
+  "success",
+  "danger",
+] as const;
 export type colors = typeof buttonColors[number];
 
 export const Button: React.FC<ButtonProps> = ({

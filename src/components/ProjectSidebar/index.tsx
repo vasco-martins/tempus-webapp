@@ -1,6 +1,13 @@
 import { useRouter } from "next/router";
 import React from "react";
-import { FiArrowLeft, FiBox, FiHome, FiSettings } from "react-icons/fi";
+import {
+  FiArrowLeft,
+  FiBox,
+  FiCheck,
+  FiDownloadCloud,
+  FiHome,
+  FiSettings,
+} from "react-icons/fi";
 import { Project } from "../../@types/project";
 import SidebarWrapper from "../Sidebar/SidebarWrapper";
 import SidebarItem from "../SidebarItem";
@@ -25,6 +32,20 @@ const ProjectSidebar: React.FC<ProjectLayoutProps> = ({ project }) => {
 
       <SidebarItem icon={<FiHome />} name="Projetos" href="/" />
       <SidebarItem icon={<FiSettings />} name="Definições" href="/settings" />
+
+      <p className="text-gray-600">Código do Projeto</p>
+
+      <SidebarItem
+        icon={<FiDownloadCloud />}
+        name="Download"
+        href={project.download_link}
+      />
+
+      <SidebarItem
+        icon={<FiCheck />}
+        name="Deploy"
+        href={project.download_link}
+      />
     </SidebarWrapper>
   );
 };

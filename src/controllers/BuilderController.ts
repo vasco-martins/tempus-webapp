@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 
-export default class ProjectController {
+export default class BuilderController {
   private static baseUrl = process.env.NEXT_PUBLIC_API_URL + '/builder';
 
   static async showFields () {
@@ -19,6 +19,36 @@ export default class ProjectController {
       return null;
     }
   }
+
+  static async getModelNames (token, projectId): Promise<boolean> {
+      const response = await axios.post(this.baseUrl + "/projectModelNames", {
+        'project_id': projectId,
+      },{
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + token
+        },
+
+      });
+      
+      return response.data;
+  }
+
+  static async getParentMenuNames (token, projectId): Promise<boolean> {
+    const response = await axios.post(this.baseUrl + "/parentMenuNames", {
+      'project_id': projectId,
+    },{
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token
+      },
+
+    });
+    
+    return response.data;
+}
 
 
 }

@@ -23,22 +23,36 @@ import getCurrentUser from "../../../helpers/getUser";
 import * as _ from "lodash";
 import { SortableContainer, SortableElement } from "react-sortable-hoc";
 import arrayMove from "array-move";
+import CrudController from "../../../controllers/CrudController";
 
-export default function New({ user, token, project, fields }) {
+export default function New({
+  user,
+  token,
+  project,
+  fields,
+  modelNames,
+  parentMenuNames,
+}) {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [errors, setErrors] = useState(null);
   const [name, setName] = useState("");
+  const [nameError, setNameError] = useState(null);
   const [label, setLabel] = useState("");
   const [fieldType, setFieldType] = useState("");
+  const [isSearchable, setIsSearchable] = useState("");
   const [fieldName, setFieldName] = useState("");
   const [databaseFieldName, setDatabaseFieldName] = useState("");
+  const [databaseFieldNameError, setDatabaseFieldNameError] = useState(null);
   const [isRequired, setIsRequired] = useState(false);
   const [validations, setValidations] = useState({});
   const [crudFields, setCrudFields] = useState([]);
   const [isEditingField, setIsEditingField] = useState(false);
   const [softDeletes, setSoftDeletes] = useState(false);
   const [editingIndex, setEditingIndex] = useState(-1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [parentMenu, setParentMenu] = useState(null);
 
   const [selectKey, setSelectKey] = useState("");
   const [selectValue, setSelectValue] = useState("");
@@ -58,8 +72,48 @@ export default function New({ user, token, project, fields }) {
     setCrudFields(crudFieldMutation);
   };
 
+  const getParentOptions = () => {
+    let parents = [];
+
+    for (const index in parentMenuNames) {
+      parents.push({
+        id: index,
+        value: parentMenuNames[index],
+      });
+    }
+
+    return parents;
+  };
+
+  const submit = async () => {
+    if (!name || !label) return;
+    setIsLoading(true);
+    setSuccess(false);
+    const response = await CrudController.addCrud(
+      name,
+      label,
+      softDeletes,
+      crudFields,
+      project.id,
+      token,
+      parentMenu
+    );
+
+    if (response) {
+      setSuccess(true);
+      router.push({
+        pathname: "projects/[id]",
+        query: { id: project.id },
+      });
+      return;
+    }
+
+    setSuccess(false);
+  };
+
   const addSelectFields = (name, data) => {
     setSelectKeyError("");
+    if (!selectKey || !selectValue) return;
     if (selectFields.some((e) => e.name === data.name)) {
       setSelectKeyError("A chave já existe");
       return;
@@ -70,7 +124,7 @@ export default function New({ user, token, project, fields }) {
 
     selectFieldMutation.push(data);
     setSelectFields(selectFieldMutation);
-    setValidations({ ...validations, name: selectFieldMutation });
+    setValidations({ ...validations, values: selectFieldMutation });
     console.log(validations);
   };
 
@@ -88,7 +142,11 @@ export default function New({ user, token, project, fields }) {
     setFieldName("");
     setFieldType("");
     setDatabaseFieldName("");
+    setDatabaseFieldNameError(null);
     setValidations({});
+    setSelectFields([]);
+    setSelectKey("");
+    setSelectValue("");
   };
 
   const setupModalForEdit = (field) => {
@@ -96,9 +154,14 @@ export default function New({ user, token, project, fields }) {
     setIsEditingField(true);
     setErrors(null);
     setFieldName(field.name);
+    setDatabaseFieldNameError(null);
     setDatabaseFieldName(field.databaseFieldName);
     setFieldType(field.type);
     setValidations(field.validations);
+    console.log(field.validations);
+    if (field.type === "select") {
+      setSelectFields(field.validations["values"]);
+    }
   };
 
   const buildValidationField = () => {
@@ -224,6 +287,7 @@ export default function New({ user, token, project, fields }) {
 
   const addField = () => {
     let errors = {};
+    if (databaseFieldNameError) return;
     if (!databaseFieldName) {
       errors["databaseFieldName"] = "Campo obrigatório";
     }
@@ -376,8 +440,58 @@ export default function New({ user, token, project, fields }) {
   });
 
   useEffect(() => {
+    let newName = name;
+
+    newName = (newName.charAt(0).toUpperCase() + name.slice(1)).replace(
+      /[^A-Z0-9]/gi,
+      ""
+    );
+
+    setName(newName);
     setLabel(name.replace(/([A-Z])/g, " $1").trim());
+    setNameError(null);
+
+    if (name.length > 0 && name.length < 3) {
+      setNameError("O nome do model deve ter, pelo menos, 3 carateres");
+    }
+
+    if (
+      modelNames.find((key) => key.toUpperCase() === name.toUpperCase()) !=
+      undefined
+    ) {
+      setNameError("Model já existente");
+    }
   }, [name]);
+
+  useEffect(() => {
+    setDatabaseFieldName(databaseFieldName.replace(/[^A-Z0-9_]/gi, ""));
+    setDatabaseFieldNameError(null);
+    const defaultFields = ["id", "created_at", "updated_at"];
+
+    if (!isEditingField) {
+      if (
+        crudFields.find(
+          (key) =>
+            key.databaseFieldName.toUpperCase() ===
+            databaseFieldName.toUpperCase()
+        ) != undefined ||
+        defaultFields.indexOf(databaseFieldName) > -1
+      ) {
+        setDatabaseFieldNameError("Coluna já existente");
+      }
+    } else {
+      if (
+        crudFields.find(
+          (key, index) =>
+            key.databaseFieldName.toUpperCase() ===
+              databaseFieldName.toUpperCase() && index !== editingIndex
+        ) != undefined ||
+        defaultFields.indexOf(databaseFieldName) > -1
+      ) {
+        setDatabaseFieldNameError("Coluna já existente");
+      }
+    }
+  }, [databaseFieldName]);
 
   return (
     <>
@@ -395,7 +509,7 @@ export default function New({ user, token, project, fields }) {
             <TextField
               name="fieldName"
               type="text"
-              error={errors?.databaseFieldName || null}
+              error={databaseFieldNameError || null}
               onChange={setDatabaseFieldName}
               value={databaseFieldName}
               label="Coluna na Base de Dados"
@@ -467,8 +581,10 @@ export default function New({ user, token, project, fields }) {
             name="name"
             type="text"
             value={name}
-            error={errors?.name || null}
-            onChange={setName}
+            error={nameError || null}
+            onChange={async (value) => {
+              setName(value);
+            }}
             label="Nome do Model"
             required
           />
@@ -481,6 +597,19 @@ export default function New({ user, token, project, fields }) {
             label="Título no Menu"
             required
           />
+          <Select
+            name="fieldType"
+            error={errors?.parentMenu || null}
+            onChange={setParentMenu}
+            label="Menu Pai"
+            defaultValue={fieldType}
+          >
+            <option value="0">Selecione uma opção</option>
+            {getParentOptions().map((item) => (
+              <option value={item.id}>{item.value}</option>
+            ))}
+          </Select>
+          <div className="div"></div>
           <div className="checkbox flex">
             <input
               type="checkbox"
@@ -530,6 +659,15 @@ export default function New({ user, token, project, fields }) {
           </Table>
         </div>
         <div className="grid grid-rows-4"></div>
+        <Button
+          className="w-full mt-4 md:w-1/3 lg:w-48 md:mt-0"
+          onClick={submit}
+          loading={isLoading}
+          color={success ? "success" : "primary"}
+          disabled={name.length < 3 || label.length === 0 || nameError}
+        >
+          Guardar
+        </Button>
       </ProjectLayoutWrapper>
     </>
   );
@@ -541,6 +679,11 @@ export async function getServerSideProps(ctx) {
 
   const project = await ProjectController.show(token, id);
   const fields = await BuilderController.showFields();
+  const modelNames = await BuilderController.getModelNames(token, project.id);
+  const parentMenuNames = await BuilderController.getParentMenuNames(
+    token,
+    project.id
+  );
 
   if (!project) {
     return {
@@ -549,6 +692,13 @@ export async function getServerSideProps(ctx) {
   }
 
   return {
-    props: { user: user, token: token, project: project, fields: fields },
+    props: {
+      user: user,
+      token: token,
+      project: project,
+      fields: fields,
+      modelNames: modelNames,
+      parentMenuNames: parentMenuNames,
+    },
   };
 }

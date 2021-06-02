@@ -10,6 +10,7 @@ import nookies from "nookies";
 import Link from "next/link";
 import useDidMountEffect from "../../helpers/hooks/useDidMountEffect";
 import UserController from "../../controllers/UserController";
+import CookieConsent from "react-cookie-consent";
 
 export default function Register() {
   const [name, setName] = useState("");
@@ -106,6 +107,12 @@ export default function Register() {
             </Link>
           </div>
         </div>
+        <CookieConsent
+          style={{ background: "#F5F7FF", color: "#3D3D3D" }}
+          buttonText="Compreendi!"
+        >
+          Este website utiliza cookies para melhorar a experiência de utilização
+        </CookieConsent>
         <div className="image hidden md:block bg-blue-50"></div>
       </div>
     </>
