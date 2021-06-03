@@ -24,7 +24,7 @@ export const Header: React.FC<HeaderProps> = ({ user }) => {
 
   return (
     <div className="w-full z-50 h-20 shadow-lg justify-between flex items-center px-12">
-      <div className="left">Tempus</div>
+      <Image src="/logo.svg" height={35} width={150} />
 
       <div className="right flex items-center content-end">
         <div className="relative inline-block" ref={profileDropdown}>
