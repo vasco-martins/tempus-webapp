@@ -56,4 +56,58 @@ export default class ProjectController {
   
   }
 
+  static async deploy (token, id) {
+    try {
+       await axios.get(this.baseUrl + "/" + id + '/deploy', {
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + token
+        },
+      });
+  
+      return true;
+    } catch (ex) {
+      return false;
+    }
+  }
+
+
+  static async getDeployStatus (token, id) {
+    try {
+       const response = await axios.get(this.baseUrl + "/" + id + '/deployStatus', {
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + token
+        },
+      });
+  
+      return response.data;
+    } catch (ex) {
+      return false;
+    }
+  }
+
+  static async reorderMenu (token, id, ids) {
+    const data = {
+      ids: ids
+    }
+
+    try {
+      await axios.post(this.baseUrl + "/" + id + '/menu/reorder',data, 
+        {
+       headers: {
+         "Accept": "application/json",
+         "Content-Type": "application/json",
+         "Authorization": "Bearer " + token
+       },
+     });
+ 
+     return true;
+   } catch (ex) {
+     return false;
+   }
+  }
+
 }

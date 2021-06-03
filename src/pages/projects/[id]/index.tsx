@@ -1,8 +1,9 @@
+import arrayMove from "array-move";
 import { formatRelative } from "date-fns";
 import * as _ from "lodash";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FiBookmark,
   FiCheck,
@@ -11,6 +12,7 @@ import {
   FiMenu,
   FiPlus,
 } from "react-icons/fi";
+import { SortableContainer, SortableElement } from "react-sortable-hoc";
 import { toast } from "react-toastify";
 import { Button } from "../../../components/Button";
 import ProjectModelCard from "../../../components/Cards/ProjectModelCard";
@@ -35,6 +37,10 @@ export default function Home({ user, token, project }) {
   const [parentName, setParentName] = useState("");
   const [parentError, setParentError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [menu, setMenu] = useState(project.menu);
+  const [firstLevel, setFirstLevel] = useState(
+    project.menu.filter((value) => value.project_model_id === null)
+  );
 
   const [loadedProject, setLoadedProject] = useState(project);
 
@@ -47,6 +53,10 @@ export default function Home({ user, token, project }) {
   const refreshProject = async () => {
     const newProject = await ProjectController.show(token, project.id);
     setLoadedProject(newProject);
+    setMenu(newProject.menu);
+    setFirstLevel(
+      newProject.menu.filter((value) => value.project_model_id === null)
+    );
   };
 
   const createParent = async () => {
@@ -80,6 +90,42 @@ export default function Home({ user, token, project }) {
     await refreshProject();
     await toast.success("Item removido com sucesso");
   };
+
+  const reorder = async (items) => {
+    let ids = [];
+
+    for (const i in items) {
+      ids.push(items[i].id);
+    }
+
+    await ProjectController.reorderMenu(token, project.id, ids);
+  };
+
+  const SortableMenuItem = SortableElement(({ value }) => {
+    return (
+      <div className="my-8">
+        <ProjectModelCard
+          projectModel={value}
+          onDelete={openDeleteProjectModel}
+          onReorder={reorder}
+        />
+      </div>
+    );
+  });
+
+  const SortableMenu = SortableContainer(({ items }) => {
+    return (
+      <div className="gap-8">
+        {items.map((item, index) => (
+          <SortableMenuItem
+            key={`item-${item.label}`}
+            index={index}
+            value={item}
+          />
+        ))}
+      </div>
+    );
+  });
 
   return (
     <>
@@ -138,7 +184,7 @@ export default function Home({ user, token, project }) {
         </ModalFooter>
       </Modal>
 
-      <ProjectLayoutWrapper user={user} project={loadedProject}>
+      <ProjectLayoutWrapper user={user} project={loadedProject} token={token}>
         <div className="flex flex-col md:flex-row justify-between items-center mb-14 ">
           <Heading size="h2" weight="bold">
             {loadedProject.name}
@@ -167,31 +213,13 @@ export default function Home({ user, token, project }) {
             </Button>
           </div>
         </div>
-        <div className="gap-8">
-          {loadedProject.menu
-            .filter((value) => value.project_model_id === null)
-            .map((item) => (
-              <div className="my-8">
-                <ProjectModelCard
-                  projectModel={item}
-                  onDelete={() => {
-                    openDeleteProjectModel(item);
-                  }}
-                />
-
-                {item.project_models.map((child) => (
-                  <div className="my-8 ml-20">
-                    <ProjectModelCard
-                      projectModel={child}
-                      onDelete={() => {
-                        openDeleteProjectModel(item);
-                      }}
-                    />
-                  </div>
-                ))}
-              </div>
-            ))}
-        </div>
+        <SortableMenu
+          items={firstLevel}
+          onSortEnd={async ({ oldIndex, newIndex }) => {
+            setFirstLevel(arrayMove(firstLevel, oldIndex, newIndex));
+            await reorder(arrayMove(firstLevel, oldIndex, newIndex));
+          }}
+        />
       </ProjectLayoutWrapper>
     </>
   );

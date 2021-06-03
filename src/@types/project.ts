@@ -4,4 +4,5 @@ export interface Project {
   created_at: string,
   updated_at: string,
   download_link: string,
+  menu: any;
 }

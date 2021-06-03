@@ -101,8 +101,8 @@ export default function New({
 
     if (response) {
       setSuccess(true);
-      router.push({
-        pathname: "projects/[id]",
+      router.replace({
+        pathname: "/projects/[id]",
         query: { id: project.id },
       });
       return;
@@ -570,7 +570,7 @@ export default function New({
           </Button>
         </ModalFooter>
       </Modal>
-      <ProjectLayoutWrapper user={user} project={project}>
+      <ProjectLayoutWrapper user={user} project={project} token={token}>
         <div className="flex flex-col md:flex-row justify-between items-center mb-14">
           <Heading size="h2" weight="bold">
             Adicionar CRUD
