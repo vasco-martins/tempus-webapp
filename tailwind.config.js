@@ -26,7 +26,8 @@ module.exports = {
         'success-hover': '#51A775',
         'success-disabled': '#AAEDC6',
         'sidebar': '#F5F5F5',
-        'danger': '#EB5757'
+        'danger': '#EB5757',
+        'warning': '#F2C94C',
       }
     }
   },

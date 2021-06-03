@@ -1,13 +1,14 @@
-import AddOrEdit from "../../../components/Crud/AddOrEdit";
-import BuilderController from "../../../controllers/BuilderController";
-import ProjectController from "../../../controllers/ProjectController";
-import getCurrentUser from "../../../helpers/getUser";
+import AddOrEdit from "../../../../../components/Crud/AddOrEdit";
+import BuilderController from "../../../../../controllers/BuilderController";
+import CrudController from "../../../../../controllers/CrudController";
+import ProjectController from "../../../../../controllers/ProjectController";
+import getCurrentUser from "../../../../../helpers/getUser";
 
 export default AddOrEdit;
 
 export async function getServerSideProps(ctx) {
   const { user, token } = await getCurrentUser(ctx);
-  const { id } = ctx.query;
+  const { id, mid } = ctx.query;
 
   const project = await ProjectController.show(token, id);
   const fields = await BuilderController.showFields();
@@ -16,8 +17,9 @@ export async function getServerSideProps(ctx) {
     token,
     project.id
   );
+  const projectModel = await CrudController.showCrud(mid, token);
 
-  if (!project) {
+  if (!project || !projectModel) {
     return {
       notFound: true,
     };
@@ -31,6 +33,7 @@ export async function getServerSideProps(ctx) {
       fields: fields,
       modelNames: modelNames,
       parentMenuNames: parentMenuNames,
+      projectModel: projectModel,
     },
   };
 }

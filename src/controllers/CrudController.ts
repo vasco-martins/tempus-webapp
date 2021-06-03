@@ -4,7 +4,7 @@ import axios from 'axios';
 export default class CrudController {
   private static baseUrl = process.env.NEXT_PUBLIC_API_URL + '/project-models';
 
-  static async addCrud (name, label, softDeletes, fields, projectId, token, parentMenuId) {
+  static async addOrEdit (name, label, softDeletes, fields, projectId, token, parentMenuId, projectModel) {
 
     const jsonFields = [];
 
@@ -34,11 +34,43 @@ export default class CrudController {
       "name": name,
       "label": label,
       "soft_delete": softDeletes,
-      "fields": jsonFields
+      "fields": jsonFields,
+      "edit_project_model_id": projectModel ? projectModel.id : null
     }
 
     try {
-      const response = await axios.post(this.baseUrl, data, {
+      let response = null;
+      if (projectModel) {
+         response = await axios.patch(this.baseUrl + '/' + projectModel.id, data, {
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+  
+          },
+        });
+      } else {
+         response = await axios.post(this.baseUrl, data, {
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+  
+          },
+        });
+      }
+     
+  
+      return response.data;
+    } catch (ex) {
+      return null;
+    }
+  }
+
+  static async showCrud (projectModelId, token) {
+    
+    try {
+      const response = await axios.get(this.baseUrl + '/' + projectModelId, {
         headers: {
           "Accept": "application/json",
           "Content-Type": "application/json",
@@ -73,7 +105,7 @@ export default class CrudController {
     }
   }
     
-  static async addParent (name, projectId, token) {
+  static async addOrEditParent (name, projectId, token, parentMenuId) {
 
     const url = process.env.NEXT_PUBLIC_API_URL + '/projects/' + projectId + '/parent-menus';
     const data = {
@@ -83,13 +115,25 @@ export default class CrudController {
     }
 
     try {
-      const response = await axios.post(url, data, {
-        headers: {
-          "Accept": "application/json",
-          "Content-Type": "application/json",
-          "Authorization": "Bearer " + token
-        },
-      });
+      let response = null;
+      if (parentMenuId) {
+        response = await axios.patch(url + "/" + parentMenuId, data, {
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+          },
+        });
+      } else {
+        response = await axios.post(url, data, {
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+          },
+        });
+      }
+    
   
       return response.data.data;
     } catch (ex) {

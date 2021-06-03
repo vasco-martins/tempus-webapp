@@ -38,6 +38,7 @@ export default function Home({ user, token, project }) {
   const [parentError, setParentError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [menu, setMenu] = useState(project.menu);
+  const [parentMenuId, setParentMenuId] = useState(null);
   const [firstLevel, setFirstLevel] = useState(
     project.menu.filter((value) => value.project_model_id === null)
   );
@@ -62,10 +63,15 @@ export default function Home({ user, token, project }) {
   const createParent = async () => {
     setParentError(null);
     setLoading(true);
-    const data = await CrudController.addParent(parentName, project.id, token);
+    const data = await CrudController.addOrEditParent(
+      parentName,
+      project.id,
+      token,
+      parentMenuId ? parentMenuId : null
+    );
     setLoading(false);
 
-    if (data.error) {
+    if (data?.error) {
       setParentError(data.error);
       setLoading(false);
       return;
@@ -74,7 +80,17 @@ export default function Home({ user, token, project }) {
     await refreshProject();
     setIsOpen(false);
 
-    await toast.success("Pai adicionado com sucesso!");
+    if (parentMenuId) {
+      await toast.success("Pai editado com sucesso!");
+    } else {
+      await toast.success("Pai adicionado com sucesso!");
+    }
+  };
+
+  const editParent = (parent) => {
+    setIsOpen(true);
+    setParentMenuId(parent.id);
+    setParentName(parent.label);
   };
 
   const openDeleteProjectModel = (projectModel) => {
@@ -108,6 +124,7 @@ export default function Home({ user, token, project }) {
           projectModel={value}
           onDelete={openDeleteProjectModel}
           onReorder={reorder}
+          onParentEdit={editParent}
         />
       </div>
     );
@@ -150,7 +167,7 @@ export default function Home({ user, token, project }) {
       >
         <ModalHeader>
           <Heading size="h2" weight="bold">
-            Novo Pai
+            {parentMenuId ? "Editar" : "Adicionar"} Pai
           </Heading>
         </ModalHeader>
         <ModalBody>
@@ -160,6 +177,7 @@ export default function Home({ user, token, project }) {
             error={parentError}
             label="Nome do Pai"
             onKeyDown={handleKeydownEvent}
+            value={parentName}
           />
         </ModalBody>
         <ModalFooter>
@@ -170,7 +188,7 @@ export default function Home({ user, token, project }) {
             className=""
             onClick={createParent}
           >
-            Criar
+            {parentMenuId ? "Guardar" : "Criar"}
           </Button>
           <Button
             className=""

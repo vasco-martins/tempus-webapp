@@ -1,7 +1,9 @@
 import { formatRelative } from "date-fns";
 import { pt } from "date-fns/locale";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
-import { FiBookmark, FiMenu, FiTrash } from "react-icons/fi";
+import { FiBookmark, FiEdit, FiMenu, FiTrash } from "react-icons/fi";
 import {
   arrayMove,
   SortableContainer,
@@ -18,14 +20,17 @@ export interface ProjectModelCardProps {
   projectModel: any;
   onDelete: Function;
   onReorder: Function;
+  onParentEdit: Function;
 }
 
 const ProjectModelCard: React.FC<ProjectModelCardProps> = ({
   projectModel,
   onDelete,
   onReorder,
+  onParentEdit,
 }) => {
   const [subMenus, setSubMenus] = React.useState(projectModel.project_models);
+  const router = useRouter();
 
   const SortableMenuItem = SortableElement(({ value }) => {
     return (
@@ -34,6 +39,7 @@ const ProjectModelCard: React.FC<ProjectModelCardProps> = ({
           projectModel={value}
           onDelete={onDelete}
           onReorder={onReorder}
+          onParentEdit={onParentEdit}
         />
       </div>
     );
@@ -79,7 +85,34 @@ const ProjectModelCard: React.FC<ProjectModelCardProps> = ({
           </div>
         </div>
 
-        <div className="button-group">
+        <div className="button-group flex gap-4">
+          {!projectModel.is_parent ? (
+            <Link
+              href={
+                "/projects/" +
+                projectModel.project_id +
+                "/cruds/" +
+                projectModel.id +
+                "/edit"
+              }
+            >
+              <Button
+                className="mt-4 md:mt-0"
+                color="warning"
+                onClick={() => {}}
+              >
+                <FiEdit />
+              </Button>
+            </Link>
+          ) : (
+            <Button
+              className="mt-4 md:mt-0"
+              color="warning"
+              onClick={() => onParentEdit(projectModel)}
+            >
+              <FiEdit />
+            </Button>
+          )}
           <Button
             className="mt-4  md:mt-0"
             color="danger"

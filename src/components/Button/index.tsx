@@ -17,6 +17,7 @@ export const buttonColors = [
   "secondary",
   "success",
   "danger",
+  "warning",
 ] as const;
 export type colors = typeof buttonColors[number];
 
