@@ -56,6 +56,47 @@ export default class ProjectController {
   
   }
 
+
+  static async update (token, projectId, projectName) {
+
+    try {
+      const response = await axios.patch(this.baseUrl + '/' + projectId,
+        {
+         name: projectName
+       }, {
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + token
+         },
+         
+      })
+      return {};
+    } catch (err) {
+      return { error: err.response.data.errors.name };
+    }
+  
+  }
+
+  static async destroy (token, projectId) {
+
+    try {
+      const response = await axios.delete(this.baseUrl + '/' + projectId,
+        {
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + token
+         },
+         
+      })
+      return true;
+    } catch (err) {
+      return false;
+    }
+  
+  }
+
   static async deploy (token, id) {
     try {
        await axios.get(this.baseUrl + "/" + id + '/deploy', {

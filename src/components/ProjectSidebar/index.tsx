@@ -31,14 +31,22 @@ const ProjectSidebar: React.FC<ProjectLayoutProps> = ({ project, token }) => {
         {router.pathname !== "/" && (
           <SidebarItem icon={<FiArrowLeft />} name="Voltar" href="/" />
         )}
+
+        <SidebarItem icon={<FiHome />} name="Projetos" href="/" />
+
+        <p className="text-gray-600">Projeto</p>
+
         <SidebarItem
           icon={<FiBox />}
           name={project.name}
           href={`/projects/${project.id}`}
         />
 
-        <SidebarItem icon={<FiHome />} name="Projetos" href="/" />
-        <SidebarItem icon={<FiSettings />} name="Definições" href="/settings" />
+        <SidebarItem
+          icon={<FiSettings />}
+          name="Definições"
+          href={`/projects/${project.id}/settings`}
+        />
 
         <p className="text-gray-600">Código do Projeto</p>
 
