@@ -1,4 +1,4 @@
-import React from "react";
+import React, { KeyboardEventHandler } from "react";
 import Logo from "../../assets/square-logo.svg";
 
 export interface TextFieldProps {
@@ -11,7 +11,7 @@ export interface TextFieldProps {
   error?: string;
   required?: boolean;
   pattern?: string;
-  onKeyDown?: (event: KeyboardEvent) => void;
+  onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
   onChange: (val: string) => void;
 }
 

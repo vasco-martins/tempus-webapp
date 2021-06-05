@@ -17,6 +17,16 @@ export async function getServerSideProps(ctx) {
     project.id
   );
 
+  const projectModelList = await BuilderController.showProjectModelList(
+    token,
+    project.id
+  );
+
+  const projectModelFieldList = await BuilderController.showProjectModelFieldList(
+    token,
+    project.id
+  );
+
   if (!project) {
     return {
       notFound: true,
@@ -31,6 +41,8 @@ export async function getServerSideProps(ctx) {
       fields: fields,
       modelNames: modelNames,
       parentMenuNames: parentMenuNames,
+      projectModelList: projectModelList,
+      projectModelFieldList: projectModelFieldList,
     },
   };
 }

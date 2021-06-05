@@ -21,6 +21,7 @@ export interface ProjectModelCardProps {
   onDelete: Function;
   onReorder: Function;
   onParentEdit: Function;
+  dragHandle: any;
 }
 
 const ProjectModelCard: React.FC<ProjectModelCardProps> = ({
@@ -28,6 +29,7 @@ const ProjectModelCard: React.FC<ProjectModelCardProps> = ({
   onDelete,
   onReorder,
   onParentEdit,
+  dragHandle,
 }) => {
   const [subMenus, setSubMenus] = React.useState(projectModel.project_models);
   const router = useRouter();
@@ -40,6 +42,7 @@ const ProjectModelCard: React.FC<ProjectModelCardProps> = ({
           onDelete={onDelete}
           onReorder={onReorder}
           onParentEdit={onParentEdit}
+          dragHandle={dragHandle}
         />
       </div>
     );
@@ -66,7 +69,7 @@ const ProjectModelCard: React.FC<ProjectModelCardProps> = ({
         style={{ boxShadow: "0px 4px 40px rgba(122, 122, 122, 0.1)" }}
       >
         <div className="flex items-center">
-          <FiMenu />
+          {dragHandle}
           <div className="flex justify-center px-8 flex-col">
             <div className="flex gap-4">
               <Heading size="h4">{projectModel.label}</Heading>
@@ -109,9 +112,8 @@ const ProjectModelCard: React.FC<ProjectModelCardProps> = ({
               className="mt-4 md:mt-0"
               color="warning"
               onClick={() => onParentEdit(projectModel)}
-            >
-              <FiEdit />
-            </Button>
+              icon={<FiEdit onClick={() => onParentEdit(projectModel)} />}
+            ></Button>
           )}
           <Button
             className="mt-4  md:mt-0"
@@ -131,6 +133,7 @@ const ProjectModelCard: React.FC<ProjectModelCardProps> = ({
           setSubMenus(arrayMove(subMenus, oldIndex, newIndex));
           await onReorder(arrayMove(subMenus, oldIndex, newIndex));
         }}
+        useDragHandle
       />
     </>
   );

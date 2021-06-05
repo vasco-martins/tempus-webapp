@@ -7,7 +7,7 @@ console.log(`   ✅ purgeEnabled=${purgeEnabled}\n`)
 
 module.exports = {
   purge: {
-    enabled: purgeEnabled,
+    enabled: false,
     content: ["./src/**/*.html", "./src/**/*.tsx", "./src/**/*.jsx"]
   },
   darkMode: false, // or 'media' or 'class'

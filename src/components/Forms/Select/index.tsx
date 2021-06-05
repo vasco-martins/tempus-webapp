@@ -11,7 +11,6 @@ export interface SelectProps {
   required?: boolean;
   defaultValue?: any;
 
-  onKeyDown?: (event: KeyboardEvent) => void;
   onChange: (val: string) => void;
 }
 

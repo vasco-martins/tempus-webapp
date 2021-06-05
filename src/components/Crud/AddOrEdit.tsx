@@ -31,6 +31,8 @@ export default function AddOrEdit({
   modelNames,
   parentMenuNames,
   projectModel,
+  projectModelList,
+  projectModelFieldList,
 }) {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
@@ -280,6 +282,70 @@ export default function AddOrEdit({
           </div>
         );
       }
+
+      if (validation.type === "crudSelect") {
+        return (
+          <div className="mx-2">
+            <Select
+              name="crudSelect"
+              error={errors?.crudSelect || null}
+              onChange={(v) => {
+                if (v != "0") {
+                  setValidations({
+                    ...validations,
+                    ["field"]: Object.values(projectModelFieldList[v])[0],
+                  });
+                  setValidations({ ...validations, [validation.name]: v });
+                }
+              }}
+              label={validation.label}
+              value={validations[validation.name]}
+            >
+              <option value="0">Selecione uma opção</option>
+
+              {Object.keys(projectModelList).map((field, index) => {
+                if (!projectModel || projectModel.id != field) {
+                  return (
+                    <option value={field}>{projectModelList[field]}</option>
+                  );
+                }
+              })}
+            </Select>
+          </div>
+        );
+      }
+
+      if (validation.type === "fieldSelect") {
+        return (
+          <div className="mx-2">
+            <Select
+              name="fieldSelect"
+              error={errors?.fieldSelect || null}
+              onChange={(v) => {
+                setValidations({ ...validations, [validation.name]: v });
+                console.log(validations);
+              }}
+              label={validation.label}
+              value={validations[validation.name]}
+            >
+              <option value="0">Selecione uma opção</option>
+              {Object.keys(
+                projectModelFieldList[validations["crud"]] ?? {}
+              ).map((field, index) => {
+                return (
+                  <option value={field}>
+                    {
+                      projectModelFieldList[
+                        validations["crud"] ?? Object.keys(projectModelList)[0]
+                      ][field]
+                    }
+                  </option>
+                );
+              })}
+            </Select>
+          </div>
+        );
+      }
     });
 
     return htmlFields;
@@ -290,6 +356,7 @@ export default function AddOrEdit({
     if (databaseFieldNameError) return;
     if (!databaseFieldName) {
       errors["databaseFieldName"] = "Campo obrigatório";
+      setDatabaseFieldNameError("Campo obrigatório");
     }
     if (!fieldName) {
       errors["fieldName"] = "Campo obrigatório";
@@ -297,6 +364,16 @@ export default function AddOrEdit({
 
     if (!fieldType || fieldType === "0") {
       errors["fieldType"] = "Campo obrigatório";
+    }
+
+    if (fieldType === "belongsTo") {
+      if (!validations["crud"] || validations["crud"] === 0) {
+        errors["crudSelect"] = "Campo obrigatório";
+      }
+
+      if (!validations["field"] || validations["field"] === 0) {
+        errors["fieldSelect"] = "Campo obrigatório";
+      }
     }
 
     if (Object.keys(errors).length > 0) {

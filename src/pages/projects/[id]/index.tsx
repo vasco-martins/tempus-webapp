@@ -12,7 +12,11 @@ import {
   FiMenu,
   FiPlus,
 } from "react-icons/fi";
-import { SortableContainer, SortableElement } from "react-sortable-hoc";
+import {
+  SortableContainer,
+  SortableElement,
+  SortableHandle,
+} from "react-sortable-hoc";
 import { toast } from "react-toastify";
 import { Button } from "../../../components/Button";
 import ProjectModelCard from "../../../components/Cards/ProjectModelCard";
@@ -44,6 +48,10 @@ export default function Home({ user, token, project }) {
   );
 
   const [loadedProject, setLoadedProject] = useState(project);
+
+  const DragHandle = SortableHandle(() => (
+    <FiMenu className="cursor-pointer" />
+  ));
 
   const handleKeydownEvent = async (e) => {
     if (!(e.key === "Enter") || parentName.length < 2) return;
@@ -125,6 +133,7 @@ export default function Home({ user, token, project }) {
           onDelete={openDeleteProjectModel}
           onReorder={reorder}
           onParentEdit={editParent}
+          dragHandle={<DragHandle />}
         />
       </div>
     );
@@ -237,6 +246,7 @@ export default function Home({ user, token, project }) {
             setFirstLevel(arrayMove(firstLevel, oldIndex, newIndex));
             await reorder(arrayMove(firstLevel, oldIndex, newIndex));
           }}
+          useDragHandle
         />
       </ProjectLayoutWrapper>
     </>

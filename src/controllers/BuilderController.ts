@@ -20,6 +20,44 @@ export default class BuilderController {
     }
   }
 
+
+  static async showProjectModelFieldList (token, projectId) {
+
+    try {
+      const response = await axios.get(this.baseUrl + "/" + projectId + "/projectModelFieldList", {
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + token
+        },
+      });
+  
+      return response.data ;
+    } catch (ex) {
+      return null;
+    }
+  }
+
+
+
+  static async showProjectModelList (token, projectId) {
+
+    try {
+      const response = await axios.get(this.baseUrl + "/" + projectId + "/projectModelList", {
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + token
+        },
+      });
+  
+      return response.data ;
+    } catch (ex) {
+      return null;
+    }
+  }
+
+
   static async getModelNames (token, projectId): Promise<boolean> {
       const response = await axios.post(this.baseUrl + "/projectModelNames", {
         'project_id': projectId,
