@@ -161,7 +161,7 @@ export default function Home({ user, token, project }) {
 
       <DeleteModal
         title="Remover item"
-        message="Tem a certeza que pretende remover"
+        message="Tem a certeza que pretende remover?"
         isOpen={isDeleteOpen}
         isLoading={loading}
         onDelete={deleteProjectModel}

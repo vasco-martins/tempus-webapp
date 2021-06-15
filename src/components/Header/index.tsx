@@ -5,6 +5,7 @@ import { useOuterClick } from "react-outer-click";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import UserController from "../../controllers/UserController";
+import { FiChevronDown } from "react-icons/fi";
 
 export interface HeaderProps {
   user: User;
@@ -36,13 +37,17 @@ export const Header: React.FC<HeaderProps> = ({ user }) => {
             onClick={toggleIsProfileMenuOpen}
           >
             <span className="text-gray-600">{user.name}</span>
-            <Image
+            <img
               className="rounded-full"
-              src="/profile.png"
+              src={
+                "https://eu.ui-avatars.com/api/?name=" +
+                (user.name + "").replace(" ", "+")
+              }
               alt="Picture of the author"
               width={38}
               height={38}
             />
+            <FiChevronDown />
           </div>
           {isProfileMenuOpen && (
             <div
@@ -52,20 +57,14 @@ export const Header: React.FC<HeaderProps> = ({ user }) => {
               aria-labelledby="options-menu"
             >
               <div className="py-1" role="none">
-                <a
-                  href="#"
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
-                  role="menuitem"
-                >
-                  Account settings
-                </a>
-                <a
-                  href="#"
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
-                  role="menuitem"
-                >
-                  Support
-                </a>
+                <Link href="/profile">
+                  <a
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                    role="menuitem"
+                  >
+                    A minha conta
+                  </a>
+                </Link>
 
                 <a
                   className="block px-4 py-2 text-sm text-red-700 hover:bg-gray-100 hover:text-gray-900 cursor-pointer transition-colors"

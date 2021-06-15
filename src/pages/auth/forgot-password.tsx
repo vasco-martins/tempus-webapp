@@ -8,19 +8,19 @@ import CookieConsent from "react-cookie-consent";
 import { Button } from "../../components/Button";
 import { TextField } from "../../components/Forms/TextField";
 import { Heading } from "../../components/Heading";
+import UserController from "../../controllers/UserController";
 
-export default function Login() {
+export default function ForgotPassword() {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+
   const [emailError, setEmailError] = useState(null);
-  const [passwordError, setPasswordError] = useState(null);
+
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const router = useRouter();
 
   const handleKeydownEvent = async (e) => {
-    if (!(e.key === "Enter") || email.length == 0 || password.length == 0)
-      return;
+    if (!(e.key === "Enter") || email.length == 0) return;
 
     await submit();
   };
@@ -28,9 +28,8 @@ export default function Login() {
   const submit = async () => {
     setLoading(true);
     setEmailError(null);
-    setPasswordError(null);
+
     setSuccess(false);
-    const url = process.env.NEXT_PUBLIC_API_URL + "/auth/login";
 
     const emailRegexValidation = /\S+@\S+\.\S+/;
 
@@ -40,38 +39,25 @@ export default function Login() {
       return;
     }
 
-    try {
-      const response = await axios.post(url, {
-        email: email,
-        password: password,
-      });
-
-      const cookies = parseCookies();
-      setCookie(null, "token", response.data?.token, {
-        maxAge: 30 * 24 * 60 * 60,
-        path: "/",
-      });
-
-      router.push("/");
-
-      setSuccess(true);
-    } catch (ex) {
-      setEmailError("Email ou password errados");
-      setLoading(false);
-      return;
-    }
+    await UserController.forgotPassword(router, email);
   };
   return (
     <>
       <Head>
-        <title>Tempus | Login</title>
+        <title>Tempus | Esqueci-me da password</title>
       </Head>
       <div className="grid grid-cols-1 md:grid-cols-2 min-h-screen">
         <div className="login flex items-center bg-white">
           <div className="w-2/3 grid grid-cols-1 gap-6  m-auto">
             <Heading size={"h2"} weight={"bold"} className="">
-              Login
+              Esqueci-me da password
             </Heading>
+
+            <p>
+              Insira o seu email para lhe enviar-mos um código que lhe permitirá
+              introduzir uma nova password.
+            </p>
+
             <TextField
               name="email"
               type="email"
@@ -80,35 +66,20 @@ export default function Login() {
               label="Email"
               onKeyDown={handleKeydownEvent}
             />
-            <TextField
-              name="password"
-              type="password"
-              onChange={setPassword}
-              label="Password"
-              error={passwordError}
-              onKeyDown={handleKeydownEvent}
-            />
+
             <Button
               onClick={submit}
               loading={loading}
               color={success ? "success" : "primary"}
-              disabled={email.length == 0 || password.length == 0}
+              disabled={email.length == 0}
               className="md:w-1/4"
             >
-              Login
+              Submeter
             </Button>
             <div className="group flex flex-col gap-2">
-              <Link href="/auth/register">
+              <Link href="/auth/login">
                 <p className="cursor-pointer">
-                  Não tem uma conta?{" "}
-                  <span className="underline text-primary">
-                    Registe-se aqui!
-                  </span>
-                </p>
-              </Link>
-              <Link href="/auth/forgot-password">
-                <p className="underline text-primary cursor-pointer">
-                  Esqueci-me da password
+                  <span className="underline text-primary">Voltar </span>
                 </p>
               </Link>
             </div>

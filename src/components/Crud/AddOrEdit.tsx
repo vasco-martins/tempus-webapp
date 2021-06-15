@@ -726,15 +726,6 @@ export default function AddOrEdit({
             ))}
           </Select>
           <div className="div"></div>
-          <div className="checkbox flex">
-            <input
-              type="checkbox"
-              className="h-6 w-6 rounded border-none bg-indigo-100 mr-4 font-thin"
-              name="soft_deletes"
-              onChange={(e) => setSoftDeletes(e.target.checked)}
-            />
-            Utilizar soft-deletes
-          </div>
         </div>
         <div className="my-8">
           <Heading size="h3" weight="thin">

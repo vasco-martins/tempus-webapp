@@ -16,6 +16,33 @@ export default class UserController {
       }, {
         headers: {
           Accept: "application/json",
+          
+        }
+      });
+      return response.data.token;
+    } catch (err) {
+
+      return { errors: err.response.data.errors }
+
+    }
+
+  }
+
+  static async updateUser (id: number, name: string, email: string, password: string, password_confirmation: string) {
+    const { token } = parseCookies();
+
+    const url = process.env.NEXT_PUBLIC_API_URL + "/users/" + id;
+
+    try {
+      const response = await axios.patch(url, {
+        name: name,
+        email: email,
+        password: password,
+        password_confirmation: password_confirmation
+      }, {
+        headers: {
+          Accept: "application/json",
+          Authorization: "Bearer " + token,
         }
       });
       return response.data.token;
@@ -67,5 +94,42 @@ export default class UserController {
     }
 
   }
+
+  static async forgotPassword (router: NextRouter, email: string) {
+      const url = process.env.NEXT_PUBLIC_API_URL + "/auth/forgot-password";
+      
+      await axios.post(url, {email: email}, {
+        headers: {
+          Accept: "application/json",
+
+        }
+      });
+
+      router.push("/auth/reset-password/" + email);
+  
+  }
+
+  static async resetPassword (email: string, code: string, password: string) {
+
+    const url = process.env.NEXT_PUBLIC_API_URL + "/auth/reset-password";
+
+    try {
+      const response = await axios.post(url, {
+        code: code,
+        email: email,
+        password: password,
+
+      }, {
+        headers: {
+          Accept: "application/json",
+        }
+      });
+      return response.data.token;
+    } catch (err) {
+      return { errors: err.response.data.errors }
+    }
+
+
+}
 
 }
