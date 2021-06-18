@@ -131,20 +131,6 @@ export default function Profile({ user, token }) {
               Guardar
             </Button>
           </div>
-          <div className="flex flex-col mt-10">
-            <Heading size="h5" className="mb-5">
-              Remover Projeto
-            </Heading>
-            <div className="w-full md:w-1/3 ">
-              <Button
-                color={"danger"}
-                className=""
-                onClick={() => setIsOpen(true)}
-              >
-                Remover Projeto
-              </Button>
-            </div>
-          </div>
         </div>
       </LayoutWrapper>
     </>

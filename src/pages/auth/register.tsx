@@ -11,6 +11,7 @@ import Link from "next/link";
 import useDidMountEffect from "../../helpers/hooks/useDidMountEffect";
 import UserController from "../../controllers/UserController";
 import CookieConsent from "react-cookie-consent";
+import Image from "next/image";
 
 export default function Register() {
   const [name, setName] = useState("");
@@ -55,6 +56,9 @@ export default function Register() {
       <div className="grid grid-cols-1 md:grid-cols-2 min-h-screen">
         <div className="login flex items-center bg-white">
           <div className="w-2/3 grid grid-cols-1 gap-6  m-auto ">
+            <div className="flex">
+              <Image src="/logo.svg" height={75} width={240} />
+            </div>
             <Heading size={"h2"} weight={"bold"} className="">
               Registar
             </Heading>
@@ -113,7 +117,18 @@ export default function Register() {
         >
           Este website utiliza cookies para melhorar a experiência de utilização
         </CookieConsent>
-        <div className="image hidden md:block bg-blue-50"></div>
+        <div
+          className="md:items-center md:justify-center hidden md:flex md:flex-col gap-7"
+          style={{
+            background:
+              "radial-gradient(51.04% 48.52% at 48.96% 51.48%, #17BDBF 0%, rgba(76, 91, 223, 0.54) 100%)",
+          }}
+        >
+          <Image src={"/register_background_2.png"} width={600} height={600} />
+          <Heading size="h3" className="text-white">
+            Pronta(o) para embarcar?
+          </Heading>
+        </div>{" "}
       </div>
     </>
   );

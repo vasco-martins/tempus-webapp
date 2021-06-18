@@ -39,6 +39,7 @@ export default function AddOrEdit({
   const [errors, setErrors] = useState(null);
   const [name, setName] = useState("");
   const [nameError, setNameError] = useState(null);
+  const [labelError, setLabelError] = useState(null);
   const [label, setLabel] = useState("");
   const [fieldType, setFieldType] = useState("");
   const [isSearchable, setIsSearchable] = useState("");
@@ -517,6 +518,14 @@ export default function AddOrEdit({
   });
 
   useEffect(() => {
+    setLabelError(null);
+
+    if (label.length > 12) {
+      setLabelError("O título do menu deve ter, no máximo, 12 carateres");
+    }
+  }, [label]);
+
+  useEffect(() => {
     let newName = name;
 
     newName = (newName.charAt(0).toUpperCase() + name.slice(1)).replace(
@@ -527,9 +536,18 @@ export default function AddOrEdit({
     setName(newName);
     setLabel(name.replace(/([A-Z])/g, " $1").trim());
     setNameError(null);
+    setLabelError(null);
 
     if (name.length > 0 && name.length < 3) {
       setNameError("O nome do model deve ter, pelo menos, 3 carateres");
+    }
+
+    if (name.length > 12) {
+      setNameError("O nome do model deve ter, no máximo, 12 carateres");
+    }
+
+    if (label.length > 12) {
+      setLabelError("O título do menu deve ter, no máximo, 12 carateres");
     }
 
     const search = modelNames.find(
@@ -708,7 +726,7 @@ export default function AddOrEdit({
             name="label"
             type="text"
             value={label}
-            error={errors?.label || null}
+            error={labelError || null}
             onChange={setLabel}
             label="Título no Menu"
             required
@@ -771,7 +789,13 @@ export default function AddOrEdit({
           onClick={submit}
           loading={isLoading}
           color={success ? "success" : "primary"}
-          disabled={name.length < 3 || label.length === 0 || nameError}
+          disabled={
+            name.length < 3 ||
+            label.length === 0 ||
+            label.length > 12 ||
+            name.length > 12 ||
+            nameError
+          }
         >
           Guardar
         </Button>

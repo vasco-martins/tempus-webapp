@@ -9,6 +9,7 @@ import { Button } from "../../../components/Button";
 import { TextField } from "../../../components/Forms/TextField";
 import { Heading } from "../../../components/Heading";
 import UserController from "../../../controllers/UserController";
+import Image from "next/image";
 
 export default function ResetPassword({ defaultEmail }) {
   const [email, setEmail] = useState(defaultEmail);
@@ -119,7 +120,19 @@ export default function ResetPassword({ defaultEmail }) {
             </CookieConsent>
           </div>
         </div>
-        <div className="image hidden md:block bg-blue-50"></div>
+        <div
+          className="md:items-center md:justify-center hidden md:flex md:flex-col gap-7"
+          style={{
+            background:
+              "radial-gradient(51.04% 48.52% at 48.96% 51.48%, #17BDBF 0%, rgba(76, 91, 223, 0.54) 100%)",
+          }}
+        >
+          <Image
+            src={"/reset_password_background.png"}
+            width={600}
+            height={600}
+          />
+        </div>{" "}
       </div>
     </>
   );
