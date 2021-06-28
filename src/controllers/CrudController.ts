@@ -8,7 +8,6 @@ export default class CrudController {
 
     const jsonFields = [];
 
-
     for (let i in fields) {
       let validations = [];
       

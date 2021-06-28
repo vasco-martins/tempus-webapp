@@ -162,8 +162,9 @@ export default function AddOrEdit({
     setFieldType(field.type);
     setValidations(field.validations);
     console.log(field.validations);
+
     if (field.type === "select") {
-      setSelectFields(field.validations["values"]);
+      setSelectFields(JSON.parse(field.validations["values"]));
     }
   };
 

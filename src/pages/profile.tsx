@@ -110,7 +110,6 @@ export default function Profile({ user, token }) {
               error={errors?.password || null}
               onChange={setPassword}
               label="Password"
-              required
             />
 
             <TextField
@@ -119,7 +118,6 @@ export default function Profile({ user, token }) {
               error={errors?.password_confirmation || null}
               onChange={setPasswordConfirm}
               label="Confirmar Password"
-              required
             />
             <Button
               loading={loading}
