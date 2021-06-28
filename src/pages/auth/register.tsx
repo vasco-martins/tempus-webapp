@@ -21,6 +21,8 @@ export default function Register() {
   const [errors, setErrors] = useState(null);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [privacy, setPrivacy] = useState(false);
+
   const router = useRouter();
 
   const submit = async () => {
@@ -54,7 +56,7 @@ export default function Register() {
         <title>Tempus | Register</title>
       </Head>
       <div className="grid grid-cols-1 md:grid-cols-2 min-h-screen">
-        <div className="login flex items-center bg-white">
+        <div className="login py-8 flex items-center bg-white">
           <div className="w-2/3 grid grid-cols-1 gap-6  m-auto ">
             <div className="flex">
               <Image src="/logo.svg" height={75} width={240} />
@@ -89,6 +91,25 @@ export default function Register() {
               label="Confirmar Password"
               error={errors?.password_confirmation || null}
             />
+
+            <div className="flex my-8">
+              <input
+                type="checkbox"
+                className="h-6 w-6 rounded border-none bg-indigo-100 mr-4 font-thin"
+                name="privacy"
+                onChange={(e) => {
+                  setPrivacy(e.target.checked);
+                }}
+                checked={privacy}
+              />
+              <p> Confirmo que li e concordo com a </p>
+              <a href="/privacy-policy" target="_blank">
+                <p className="cursor-pointer underline text-primary mx-1">
+                  Política de Privacidade
+                </p>
+              </a>
+              <p>.</p>
+            </div>
             <Button
               onClick={submit}
               loading={loading}
@@ -97,7 +118,8 @@ export default function Register() {
                 email.length == 0 ||
                 name.length == 0 ||
                 password.length == 0 ||
-                passwordConfirmation.length == 0
+                passwordConfirmation.length == 0 ||
+                !privacy
               }
               className="md:w-1/4"
             >
