@@ -58,7 +58,7 @@ export default function Login() {
         }
       );
 
-      const cookies = parseCookies();
+      //const cookies = parseCookies();
       setCookie(null, "token", response.data?.token, {
         maxAge: 30 * 24 * 60 * 60,
         path: "/",
