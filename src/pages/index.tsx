@@ -137,7 +137,7 @@ export default function Home({ user, token }) {
 }
 
 export async function getServerSideProps(ctx) {
-  const { user, token } = (await getCurrentUser(ctx)) || {};
+  const { user, token } = await getCurrentUser(ctx);
 
   return { props: { user: user, token: token } };
 }
