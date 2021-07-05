@@ -8,7 +8,7 @@ export default async function getCurrentUser(ctx) {
     ctx.res.statusCode = 302;
     ctx.res.setHeader("Location", `/auth/login`);
     ctx.res.end();
-    return;
+    return {};
   }
 
   try {
