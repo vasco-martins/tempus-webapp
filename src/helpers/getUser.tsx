@@ -17,6 +17,10 @@ export default async function getCurrentUser(ctx) {
         headers: {
           Accept: "application/json",
           Authorization: "Bearer " + cookies.token,
+
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+          "Content-Type": "application/json",
         },
       }
     );

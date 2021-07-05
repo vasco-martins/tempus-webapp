@@ -43,10 +43,20 @@ export default function Login() {
     }
 
     try {
-      const response = await axios.post(url, {
-        email: email,
-        password: password,
-      });
+      const response = await axios.post(
+        url,
+        {
+          email: email,
+          password: password,
+        },
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       const cookies = parseCookies();
       setCookie(null, "token", response.data?.token, {
