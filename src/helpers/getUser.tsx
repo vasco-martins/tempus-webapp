@@ -26,6 +26,6 @@ export default async function getCurrentUser(ctx) {
     nookies.destroy(ctx, "token");
     ctx.res.statusCode = 302;
     ctx.res.setHeader("Location", `/auth/login`);
-    return { user: null, token: null };
+    return null;
   }
 }
