@@ -39,6 +39,7 @@ export default function AddOrEdit({
   const [errors, setErrors] = useState(null);
   const [name, setName] = useState("");
   const [nameError, setNameError] = useState(null);
+  const [id, setId] = useState(null);
   const [labelError, setLabelError] = useState(null);
   const [label, setLabel] = useState("");
   const [fieldType, setFieldType] = useState("");
@@ -150,11 +151,13 @@ export default function AddOrEdit({
     setSelectFields([]);
     setSelectKey("");
     setSelectValue("");
+    setId(null);
   };
 
   const setupModalForEdit = (field) => {
     setEditingIndex(crudFields.indexOf(field));
     setIsEditingField(true);
+    setId(field.id ?? null);
     setErrors(null);
     setFieldName(field.name);
     setDatabaseFieldNameError(null);
@@ -384,6 +387,7 @@ export default function AddOrEdit({
     }
 
     const newField = {
+      id: id,
       name: fieldName,
       databaseFieldName: databaseFieldName,
       type: fieldType,
@@ -618,6 +622,8 @@ export default function AddOrEdit({
       }
 
       const newField = {
+        id: projectModel.fields[fieldIndex].id,
+
         name: projectModel.fields[fieldIndex].label,
         databaseFieldName: projectModel.fields[fieldIndex].database_name,
         type: projectModel.fields[fieldIndex].type,

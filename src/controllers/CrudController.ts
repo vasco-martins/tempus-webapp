@@ -20,6 +20,8 @@ export default class CrudController {
 
 
       jsonFields.push({
+        
+        'id': fields[i].id ?? null,
         'type': fields[i].type,
         'label': fields[i].name,
         'database_name': fields[i].databaseFieldName,
