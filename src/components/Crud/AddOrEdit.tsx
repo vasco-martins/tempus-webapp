@@ -55,6 +55,7 @@ export default function AddOrEdit({
   const [editingIndex, setEditingIndex] = useState(-1);
   const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [shouldReplaceLabel, setShouldReplaceLabel] = useState(true);
   const [parentMenu, setParentMenu] = useState(null);
 
   const [selectKey, setSelectKey] = useState("");
@@ -539,7 +540,11 @@ export default function AddOrEdit({
     );
 
     setName(newName);
-    setLabel(name.replace(/([A-Z])/g, " $1").trim());
+    if (shouldReplaceLabel) {
+      setLabel(name.replace(/([A-Z])/g, " $1").trim());
+    }
+
+    setShouldReplaceLabel(true);
     setNameError(null);
     setLabelError(null);
 
@@ -600,6 +605,8 @@ export default function AddOrEdit({
 
   useEffect(() => {
     if (!projectModel || name) return;
+
+    setShouldReplaceLabel(false);
 
     setName(projectModel.name);
     setLabel(projectModel.label);
