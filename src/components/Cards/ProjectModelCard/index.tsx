@@ -81,7 +81,7 @@ const ProjectModelCard: React.FC<ProjectModelCardProps> = ({
             </div>
             <p className="text-gray-400 font-thin mt-1">
               Atualizado{" "}
-              {formatRelative(new Date(projectModel.created_at), new Date(), {
+              {formatRelative(new Date(projectModel.updated_at), new Date(), {
                 locale: pt,
               })}{" "}
             </p>

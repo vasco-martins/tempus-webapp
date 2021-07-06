@@ -21,7 +21,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
           <Heading size="h4">{project.name}</Heading>
           <p className="text-gray-400 font-thin mt-1">
             Atualizado{" "}
-            {formatRelative(new Date(project.created_at), new Date(), {
+            {formatRelative(new Date(project.updated_at), new Date(), {
               locale: pt,
             })}
           </p>
