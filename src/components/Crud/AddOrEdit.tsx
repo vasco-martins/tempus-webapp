@@ -548,15 +548,15 @@ export default function AddOrEdit({
     setLabelError(null);
 
     if (name.length > 0 && name.length < 3) {
-      setNameError("O nome do model deve ter, pelo menos, 3 carateres");
+      setNameError("O nome deve ter, pelo menos, 3 carateres");
     }
 
-    if (name.length > 12) {
-      setNameError("O nome do model deve ter, no máximo, 12 carateres");
+    if (name.length > 18) {
+      setNameError("O nome deve ter, no máximo, 18 carateres");
     }
 
-    if (label.length > 12) {
-      setLabelError("O título do menu deve ter, no máximo, 12 carateres");
+    if (label.length > 18) {
+      setLabelError("O título do menu deve ter, no máximo, 18 carateres");
     }
 
     const search = modelNames.find(
@@ -732,7 +732,7 @@ export default function AddOrEdit({
             onChange={async (value) => {
               setName(value);
             }}
-            label="Nome Único'"
+            label="Nome Único"
             required
           />
           <TextField
