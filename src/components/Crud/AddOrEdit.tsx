@@ -544,7 +544,6 @@ export default function AddOrEdit({
       setLabel(name.replace(/([A-Z])/g, " $1").trim());
     }
 
-    setShouldReplaceLabel(true);
     setNameError(null);
     setLabelError(null);
 
