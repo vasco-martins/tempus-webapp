@@ -79,6 +79,7 @@ export default function Home({ user, token }) {
             error={projectError}
             label="Nome do Projeto"
             onKeyDown={handleKeydownEvent}
+            autocomplete="off"
           />
         </ModalBody>
         <ModalFooter>

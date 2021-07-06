@@ -11,6 +11,7 @@ export interface TextFieldProps {
   error?: string;
   required?: boolean;
   pattern?: string;
+  autocomplete?: string;
   onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
   onChange: (val: string) => void;
 }
