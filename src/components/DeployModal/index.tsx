@@ -46,7 +46,7 @@ const DeployModal: React.FC<DeployModalProps> = ({
         });
         console.log(token);
       }
-    }, 1000);
+    }, 2000);
     return () => clearInterval(interval);
   }, [isOpen]);
 
