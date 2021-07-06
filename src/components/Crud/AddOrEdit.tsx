@@ -372,7 +372,7 @@ export default function AddOrEdit({
       errors["fieldType"] = "Campo obrigatório";
     }
 
-    if (fieldType === "belongsTo") {
+    if (fieldType === "belongsTo" || fieldType === "belongsToMany") {
       if (!validations["crud"] || validations["crud"] === 0) {
         errors["crudSelect"] = "Campo obrigatório";
       }
