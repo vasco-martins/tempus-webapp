@@ -4,6 +4,7 @@ import { truncate } from "node:fs/promises";
 import React from "react";
 import {
   FiArrowLeft,
+  FiBookOpen,
   FiBox,
   FiCheck,
   FiDownloadCloud,
@@ -46,6 +47,13 @@ const ProjectSidebar: React.FC<ProjectLayoutProps> = ({ project, token }) => {
           icon={<FiSettings />}
           name="Definições"
           href={`/projects/${project.id}/settings`}
+        />
+
+        <SidebarItem
+          icon={<FiBookOpen />}
+          name="Documentação"
+          href="https://tempusdocs.avogg.pt/"
+          blank={true}
         />
 
         <p className="text-gray-600">Código do Projeto</p>

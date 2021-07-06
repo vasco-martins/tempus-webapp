@@ -8,9 +8,15 @@ export interface SidebarItemProps {
   icon: Object;
   name: string;
   href: string;
+  blank?: boolean;
 }
 
-const SidebarItem: React.FC<SidebarItemProps> = ({ icon, name, href }) => {
+const SidebarItem: React.FC<SidebarItemProps> = ({
+  icon,
+  name,
+  href,
+  blank,
+}) => {
   const router = useRouter();
 
   const [className, setClassName] = useState(
@@ -24,6 +30,16 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ icon, name, href }) => {
     }
   }, []);
 
+  if (blank) {
+    return (
+      <a href={href} target="_blank">
+        <div className={className}>
+          {icon}
+          <a className="text-lg">{name}</a>
+        </div>
+      </a>
+    );
+  }
   return (
     <Link href={href}>
       <div className={className}>
