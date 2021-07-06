@@ -732,7 +732,7 @@ export default function AddOrEdit({
             onChange={async (value) => {
               setName(value);
             }}
-            label="Nome do Model"
+            label="Nome Único'"
             required
           />
           <TextField
